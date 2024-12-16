@@ -1,0 +1,15 @@
+[project]
+name = "sedona-examples"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "apache-sedona>=1.7.0",
+    "pyspark>=3.5.3",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.4",
+]
