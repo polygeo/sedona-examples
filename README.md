@@ -2,7 +2,7 @@
 
 This repo shows how to run PySpark and Apache Sedona on your local machine.
 
-Make sure to install [uv](https://docs.astral.sh/uv/) on your machine to run the examples.
+Make sure to install [uv](https://docs.astral.sh/uv/) on your machine to run the examples.  You should also have Java installed (Java 17 works well).
 
 You can run the test suite as follows: `uv run pytest tests`.
 

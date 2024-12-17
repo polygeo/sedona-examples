@@ -1,5 +1,6 @@
 from pyspark.sql.types import StructType, StructField, IntegerType, StringType
 from pyspark.sql import SparkSession
+from pyspark.sql.functions import expr
 from sedona.spark import *
 
 config = SedonaContext.builder(). \
@@ -55,4 +56,33 @@ def test_st_distance():
     FROM some_trips
     """
     print("***")
+    sedona.sql(sql).show()
+
+
+def test_geojson():
+    df = sedona.read.format("geojson").option("multiLine", "true").load("tests/data/some_geojson.json")
+    parsedDf = df.selectExpr("explode(features) as features").select("features.*").withColumn("prop0", expr("properties['prop0']")).drop("properties").drop("type")
+    parsedDf.show()
+
+
+def test_read_csv():
+    df = sedona.read.format("csv").option("delimiter", "\t").option("header", "false").load("tests/data/county_small.tsv")
+    df.createOrReplaceTempView("some_counties")
+
+    sedona.sql("SELECT ST_GeomFromWKT(_c0) AS countyshape, _c1, _c2 from some_counties").show()
+
+
+def test_area_spheroid():
+    df = sedona.read.format("csv").option("delimiter", "\t").option("header", "false").load("tests/data/county_small.tsv")
+    df.createOrReplaceTempView("some_counties")
+
+    sql = "SELECT ST_GeomFromWKT(_c0) AS county_shape, _c5, ST_AreaSpheroid(county_shape) as county_area from some_counties"
+    sedona.sql(sql).show()
+
+
+def test_centroid():
+    df = sedona.read.format("csv").option("delimiter", "\t").option("header", "false").load("tests/data/county_small.tsv")
+    df.createOrReplaceTempView("some_counties")
+
+    sql = "SELECT ST_GeomFromWKT(_c0) AS county_shape, _c5, ST_Centroid(county_shape) as county_centriod from some_counties"
     sedona.sql(sql).show()
