@@ -22,5 +22,6 @@ derby.log
 .ipynb_checkpoints
 
 .jupyter/
+.vscode/
 
 __pycache__/
