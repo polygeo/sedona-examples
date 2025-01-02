@@ -12,6 +12,9 @@ config = (
         "spark.jars.repositories",
         "https://artifacts.unidata.ucar.edu/repository/unidata-all",
     )
+    .config("spark.executor.memory", "12G")
+    .config("spark.driver.memory", "12G")
+    .config("spark.sql.shuffle.partitions", "2")
     .getOrCreate()
 )
 

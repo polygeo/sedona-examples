@@ -27,9 +27,19 @@ def test_st_disjoint():
     2 + 2
 
 
-@pytest.mark.skip(reason="todo")
 def test_st_dwithin():
-    2 + 2
+    sql = """
+    SELECT ST_DWithin(
+        ST_GeomFromWKT('Point (-122.335167 47.608013)'),
+        ST_GeomFromWKT('Point(-73.935242 40.730610)'),
+        4000000,
+        true
+    ) as result
+    """
+    actual = sedona.sql(sql)
+    expected = sedona.createDataFrame([(True,)], ["result"])
+    chispa.assert_df_equality(actual, expected)
+
 
 
 @pytest.mark.skip(reason="todo")
