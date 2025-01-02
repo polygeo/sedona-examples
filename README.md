@@ -1,14 +1,14 @@
 # Sedona Examples
 
-This repo shows how to run PySpark and Apache Sedona on your local machine.
-
-Make sure to install [uv](https://docs.astral.sh/uv/) on your machine to run the examples.  You should also have Java installed (Java 17 works well).
+This repo demos the functionality of Apache Sedona with PySpark and provides examples that can be easily run on your local machine.
 
 You can run the test suite as follows: `uv run pytest tests`.
 
+Make sure to install [uv](https://docs.astral.sh/uv/) on your machine to run the examples.  You should also have Java installed (Java 17 works well).
+
 Here's how to run the test suite with the printed output displayed: `uv run pytest tests -s`.
 
-## Simple example
+## Demo Apache Sedona Capabilities
 
 Suppose you have the following table with the longitude/latitude for the starting and ending locations of trips:
 
@@ -47,3 +47,30 @@ Here's the result:
 | Sao Paulo|      Rio|353827.8316554592|
 +----------+---------+-----------------+
 ```
+
+## Unit testing Apache Sedona
+
+A unit test compares an actual result to an expected outcome.
+
+Let's see how to unit test the `ST_Contains` function.
+
+Start by invoking the function:
+
+```python
+sql = """
+SELECT ST_Contains(
+    ST_GeomFromWKT('POLYGON((175 150,20 40,50 60,125 100,175 150))'),
+    ST_GeomFromWKT('POINT(174 149)')
+) as result
+"""
+actual = sedona.sql(sql)
+```
+
+Now create an expected result and use chispa to confirm that the expected and actual DataFrames are the same:
+
+```python
+expected = sedona.createDataFrame([(False,)], ["result"])
+chispa.assert_df_equality(actual, expected)
+```
+
+This library provides an easy way to invoke the Sedona functions on your local machine!
