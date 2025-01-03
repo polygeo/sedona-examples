@@ -17,9 +17,16 @@ def test_st_contains():
     chispa.assert_df_equality(actual, expected)
 
 
-@pytest.mark.skip(reason="todo")
 def test_st_crosses():
-    2 + 2
+    sql = """
+    SELECT ST_Crosses(
+        ST_GeomFromWKT('POLYGON((1 1, 4 1, 4 4, 1 4, 1 1))'),
+        ST_GeomFromWKT('POLYGON((2 2, 5 2, 5 5, 2 5, 2 2))')
+    ) as result
+    """
+    actual = sedona.sql(sql)
+    expected = sedona.createDataFrame([(False,)], ["result"])
+    chispa.assert_df_equality(actual, expected)
 
 
 @pytest.mark.skip(reason="todo")

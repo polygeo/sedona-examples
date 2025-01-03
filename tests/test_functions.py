@@ -5,6 +5,29 @@ from .sedona import sedona
 import chispa
 
 
+def test_geometrytype():
+    sql = """
+    SELECT GeometryType(
+        ST_GeomFromText('LINESTRING(77.29 29.07,77.42 29.26,77.27 29.31,77.29 29.07)')
+    ) as result;
+    """
+    actual = sedona.sql(sql)
+    expected = sedona.createDataFrame([("LINESTRING",)], ["result"])
+    chispa.assert_df_equality(actual, expected)
+
+
+# def test_st_3ddistance():
+#     sql = """
+#     SELECT ST_3DDistance(
+#         ST_GeomFromText("POINT Z(0 0 -5)"),
+#         ST_GeomFromText("POINT Z(1  1 -6")
+#     ) as result
+#     """
+#     actual = sedona.sql(sql)
+#     expected = sedona.createDataFrame([(1.7,)], ["result"])
+#     chispa.assert_approx_df_equality(actual, expected, 0.1)
+
+
 def test_st_areaspheroid():
     sql = """
     SELECT ST_AreaSpheroid(ST_GeomFromWKT('Polygon ((34 35, 28 30, 25 34, 34 35))')) as result
