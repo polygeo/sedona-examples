@@ -2,20 +2,32 @@ from pyspark.sql import SparkSession
 from sedona.spark import *
 from .sedona import sedona
 from sedona.sql.st_predicates import ST_DWithin
-from pyspark.sql.types import StructType, StructField, IntegerType, StringType, FloatType
+from sedona.sql.st_constructors import ST_Point
+from pyspark.sql.functions import col, lit
+from pyspark.sql.types import (
+    StructType,
+    StructField,
+    IntegerType,
+    StringType,
+    FloatType,
+)
 from pathlib import Path
 
 
 def test_st_dwithin():
-    city_schema = StructType([
-        StructField("long", FloatType()),
-        StructField("lat", FloatType()),
-        StructField("city_name", StringType())
-    ])
-    schema = StructType([
-        StructField("left_point", city_schema),
-        StructField("left_point", city_schema),
-    ])
+    city_schema = StructType(
+        [
+            StructField("city_name", StringType()),
+            StructField("long", FloatType()),
+            StructField("lat", FloatType()),
+        ]
+    )
+    schema = StructType(
+        [
+            StructField("left_point", city_schema),
+            StructField("right_point", city_schema),
+        ]
+    )
     seattle_long = -122.335167
     seattle_lat = 47.608013
     new_york_long = -73.935242
@@ -24,17 +36,30 @@ def test_st_dwithin():
     sydney_lat = -33.9
     df = sedona.createDataFrame(
         [
-            ((seattle_long, seattle_lat, "seattle"), (new_york_long, new_york_lat, "new york")),
-            ((seattle_long, seattle_lat, "seattle"), (sydney_long, sydney_lat, "sydney"))
+            (
+                ("seattle", seattle_long, seattle_lat),
+                ("new_york", new_york_long, new_york_lat),
+            ),
+            (
+                ("seattle", seattle_long, seattle_lat),
+                ("sydney", sydney_long, sydney_lat),
+            ),
         ],
-        schema
+        schema,
     )
+    print("@@@@@")
     df.show()
-    # print(df.schema)
-    # df.withColumn(
-    #     "is_within_4k_km",
-    #     ST_DWithin(col("left_point"), col("right_point"))
-    # ).show()
+    print(df.schema)
+
+    df.withColumn(
+        "is_within_4k_km",
+        ST_DWithin(
+            ST_Point(col("left_point.long"), col("left_point.lat")),
+            ST_Point(col("right_point.long"), col("right_point.lat")),
+            lit(4000000),
+            lit(True),
+        ),
+    ).show()
 
 
 def test_st_areaspheroid():
