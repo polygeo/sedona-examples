@@ -3,6 +3,7 @@ from pyspark.sql import SparkSession
 from sedona.spark import *
 from .sedona import sedona
 import chispa
+import pytest
 
 
 def test_geometrytype():
@@ -20,12 +21,41 @@ def test_geometrytype():
 #     sql = """
 #     SELECT ST_3DDistance(
 #         ST_GeomFromText("POINT Z(0 0 -5)"),
-#         ST_GeomFromText("POINT Z(1  1 -6")
+#         ST_GeomFromText("POINT Z(1 1 -6")
 #     ) as result
 #     """
 #     actual = sedona.sql(sql)
 #     expected = sedona.createDataFrame([(1.7,)], ["result"])
 #     chispa.assert_approx_df_equality(actual, expected, 0.1)
+
+
+@pytest.mark.skip(reason="todo")
+def test_st_addmeasure():
+    2 + 2
+
+
+@pytest.mark.skip(reason="todo")
+def test_st_addpoint():
+    2 + 2
+
+
+@pytest.mark.skip(reason="todo")
+def test_st_affine():
+    2 + 2
+
+
+def test_st_angle():
+    sql = """
+    SELECT ST_Angle(
+        ST_GeomFromWKT('POINT(0 0)'),
+        ST_GeomFromWKT('POINT (1 1)'),
+        ST_GeomFromWKT('POINT(1 0)'),
+        ST_GeomFromWKT('POINT(6 2)')
+    ) as result
+    """
+    actual = sedona.sql(sql)
+    expected = sedona.createDataFrame([(0.405,)], ["result"])
+    chispa.assert_approx_df_equality(actual, expected, 0.001)
 
 
 def test_st_areaspheroid():

@@ -74,3 +74,13 @@ chispa.assert_df_equality(actual, expected)
 ```
 
 This library provides an easy way to invoke the Sedona functions on your local machine!
+
+## Run Sedona in a Jupyter notebook
+
+Create a kernel: `uv run ipython kernel install --user --name=sedonaexamples`.
+
+Start the server: `uv run --with jupyter jupyter lab`.
+
+You can open up the sample notebook and run the code.  Here is what it should look like:
+
+![notebook sedona](https://github.com/MrPowers/sedona-examples/images/blob/main/sedona-notebook.png)

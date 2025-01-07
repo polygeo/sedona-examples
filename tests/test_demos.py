@@ -47,11 +47,10 @@ def test_st_dwithin():
         ],
         schema,
     )
-    print("@@@@@")
-    df.show()
-    print(df.schema)
+    # df.show()
+    # print(df.schema)
 
-    df.withColumn(
+    res = df.withColumn(
         "is_within_4k_km",
         ST_DWithin(
             ST_Point(col("left_point.long"), col("left_point.lat")),
@@ -59,7 +58,8 @@ def test_st_dwithin():
             lit(4000000),
             lit(True),
         ),
-    ).show()
+    )
+    # res.show()
 
 
 def test_st_areaspheroid():
