@@ -83,4 +83,4 @@ Start the server: `uv run --with jupyter jupyter lab`.
 
 You can open up the sample notebook and run the code.  Here is what it should look like:
 
-![notebook sedona](https://github.com/MrPowers/sedona-examples/images/blob/main/sedona-notebook.png)
+![notebook sedona](https://github.com/MrPowers/sedona-examples/blob/main/images/sedona-notebook.png)
