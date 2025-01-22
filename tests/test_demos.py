@@ -12,6 +12,7 @@ from pyspark.sql.types import (
     FloatType,
 )
 from pathlib import Path
+from sedona.stats.clustering.dbscan import dbscan
 
 
 def test_st_dwithin():
@@ -114,3 +115,27 @@ def test_st_centroid():
 #         GROUP BY zipcodes.zipcode
 #         """
 #     ).write.mode("overwrite").csv(f"{home}/data/sedona/results.csv")
+
+
+def test_dbscan():
+    df = (
+        sedona.createDataFrame([
+            (1, 1.0, 2.0),
+            (2, 3.0, 4.0),
+            (3, 2.5, 4.0),
+            (4, 1.5, 2.5),
+            (5, 3.0, 5.0),
+            (6, 12.8, 4.5),
+            (7, 2.5, 4.5),
+            (8, 1.2, 2.5),
+            (9, 1.0, 3.0),
+            (10, 1.0, 5.0),
+            (11, 1.0, 2.5),
+            (12, 5.0, 6.0),
+            (13, 4.0, 3.0),
+        ], ["id", "x", "y"])
+    ).withColumn("point", ST_Point(col("x"), col("y")))
+    print("***")
+    df.show()
+    df.printSchema()
+    dbscan(df, 0.1, 5).show()
