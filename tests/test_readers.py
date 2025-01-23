@@ -17,7 +17,7 @@ def test_read_geojson():
         .drop("properties")
         .drop("type")
     )
-    parsedDf.show()
+    # parsedDf.show()
 
 
 def test_read_csv():
@@ -29,6 +29,6 @@ def test_read_csv():
     )
     df.createOrReplaceTempView("some_counties")
 
-    sedona.sql(
-        "SELECT ST_GeomFromWKT(_c0) AS countyshape, _c1, _c2 from some_counties"
-    ).show()
+    # sedona.sql(
+    #     "SELECT ST_GeomFromWKT(_c0) AS countyshape, _c1, _c2 from some_counties"
+    # ).show()

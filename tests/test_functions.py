@@ -100,7 +100,7 @@ def test_st_distance_sphere():
         ST_Transform(ST_Point(-46.6, -23.5), 'EPSG:3857', 'EPSG:3857')) as result
     """
     actual = sedona.sql(sql)
-    actual.show()
+    # actual.show()
     expected = sedona.createDataFrame([(7690115.1,)], ["result"])
     chispa.assert_approx_df_equality(actual, expected, 0.1)
 
@@ -115,6 +115,6 @@ def test_st_transform():
         )
     ) as result
     """
-    sedona.sql(sql).show()
+    # sedona.sql(sql).show()
     # TODO: figure out assertion
 

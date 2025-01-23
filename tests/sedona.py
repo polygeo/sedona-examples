@@ -5,7 +5,7 @@ config = (
     SedonaContext.builder()
     .config(
         "spark.jars.packages",
-        "org.apache.sedona:sedona-spark-3.5_2.12:1.6.1,"
+        "org.apache.sedona:sedona-spark-3.5_2.12:1.7.0,"
         "org.datasyslab:geotools-wrapper:1.7.0-28.5",
     )
     .config(
@@ -19,3 +19,4 @@ config = (
 )
 
 sedona = SedonaContext.create(config)
+sedona.sparkContext.setCheckpointDir("/tmp/my_checkpoint_dir")
