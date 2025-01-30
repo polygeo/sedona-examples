@@ -18,40 +18,38 @@ import chispa
 
 
 def test_join_touches():
-    # sql = """
-    # SELECT GeometryType(
-    #     ST_GeomFromText('LINESTRING(2.0 4.0,4.0 0.0)')
-    # ) as result
-    # UNION 
-    # SELECT GeometryType(
-    #     ST_GeomFromText('LINESTRING(6.0 0.0,10.0 4.0)')
-    # ) 
-    # as result;
-    # """
     df = sedona.createDataFrame([
         ("a", 'LINESTRING(2.0 4.0,4.0 0.0)'),
         ("b", 'LINESTRING(6.0 0.0,10.0 4.0)'),
     ], ["id", "geometry"])
     lines = df.withColumn("geometry", ST_GeomFromText(col("geometry")))
-    lines.show(truncate=False)
+    # lines.show(truncate=False)
     lines.createOrReplaceTempView("lines")
 
     df = sedona.createDataFrame([
         ("x", 'POLYGON((6.0 2.0,6.0 4.0, 8.0 4.0, 8.0 2.0, 6.0 2.0))'),
     ], ["id", "geometry"])
     polygons = df.withColumn("geometry", ST_GeomFromText(col("geometry")))
-    polygons.show(truncate=False)
+    # polygons.show(truncate=False)
     polygons.createOrReplaceTempView("polygons")
 
-    sedona.sql("""
+    res = sedona.sql("""
     SELECT
         lines.id as line_id,
         polygons.id as polygon_id
-    FROM
-        lines
-    INNER JOIN
-        polygons
-    ON
-        ST_Touches(lines.geometry, polygons.geometry);        
-    """).show()
+    FROM lines
+    LEFT OUTER JOIN polygons ON ST_Touches(lines.geometry, polygons.geometry);        
+    """)
+    # res.show()
 
+    schema = StructType([
+        StructField("line_id", StringType(), True),
+        StructField("polygon_id", StringType(), True)
+    ])
+    expected = sedona.createDataFrame([
+        ("a", None),
+        ("b", "x")
+    ], schema)
+    # expected.show()
+
+    chispa.assert_df_equality(res, expected)
