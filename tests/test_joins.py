@@ -177,3 +177,145 @@ def test_st_overlaps():
     # expected.show()
 
     chispa.assert_df_equality(res, expected)
+
+
+def test_knn_join():
+    # Create Addresses DataFrame
+    addresses = sedona.createDataFrame([
+        ("a1", 2.0, 3.0),
+        ("a2", 5.0, 5.0),
+        ("a3", 7.0, 2.0),
+    ], ["id", "longitude", "latitude"])
+
+    addresses = addresses.withColumn("geometry", ST_Point(col("longitude"), col("latitude")))
+    addresses.createOrReplaceTempView("addresses")
+
+    # Create Coffee Shops DataFrame
+    coffee_shops = sedona.createDataFrame([
+        ("c1", 1.0, 4.0),
+        ("c2", 3.0, 5.0),
+        ("c3", 5.0, 1.0),
+        ("c4", 8.0, 4.0),
+    ], ["id", "longitude", "latitude"])
+
+    coffee_shops = coffee_shops.withColumn("geometry", ST_Point(col("longitude"), col("latitude")))
+    coffee_shops.createOrReplaceTempView("coffee_shops")
+
+    # Perform KNN Join to find 2 nearest coffee shops to each address
+    res = sedona.sql("""
+    SELECT 
+        addresses.id AS address_id, 
+        coffee_shops.id AS coffee_shop_id
+    FROM addresses
+    JOIN coffee_shops 
+    ON ST_KNN(addresses.geometry, coffee_shops.geometry, 2)
+    """)
+
+    schema = StructType([
+        StructField("address_id", StringType(), True),
+        StructField("coffee_shop_id", StringType(), True)
+    ])
+
+    expected = sedona.createDataFrame([
+        ("a1", "c1"),
+        ("a1", "c2"),
+        ("a2", "c2"),
+        ("a2", "c4"),
+        ("a3", "c3"),
+        ("a3", "c4"),
+    ], schema)
+
+    # res.show()
+
+    chispa.assert_df_equality(res, expected)
+
+
+def test_distance_join():
+    # Create Points DataFrame
+    df = sedona.createDataFrame([
+        ("p1", "POINT (4.5 3)"),
+    ], ["id", "geometry"])
+
+    points = df.withColumn("geometry", ST_GeomFromText(col("geometry")))
+    points.createOrReplaceTempView("points")
+
+    # Create Transit Stations DataFrame
+    df = sedona.createDataFrame([
+        ("t1", 1.0, 4.0),
+        ("t2", 3.0, 4.0),
+        ("t3", 5.0, 2.0),
+        ("t4", 8.0, 4.0),
+    ], ["id", "longitude", "latitude"])
+
+    transit = df.withColumn("geometry", ST_Point(col("longitude"), col("latitude")))
+    transit.createOrReplaceTempView("transit")
+
+    # Perform Distance Join (within a distance of 2.5 units)
+    res = sedona.sql("""
+    SELECT 
+        points.id AS point_id, 
+        transit.id AS transit_id
+    FROM points
+    JOIN transit 
+    ON ST_DWithin(points.geometry, transit.geometry, 2.5)
+    """)
+
+    schema = StructType([
+        StructField("point_id", StringType(), True),
+        StructField("transit_id", StringType(), True)
+    ])
+
+    expected = sedona.createDataFrame([
+        ("p1", "t2"),
+        ("p1", "t3"),
+    ], schema)
+
+    # res.show()
+
+    chispa.assert_df_equality(res, expected)
+
+
+def test_range_join():
+    # Create City Polygon DataFrame
+    cities = sedona.createDataFrame([
+        ("city1", "POLYGON((1.0 1.0, 1.0 5.0, 5.0 5.0, 5.0 1.0, 1.0 1.0))"),
+    ], ["id", "geometry"])
+
+    cities = cities.withColumn("geometry", ST_GeomFromText(col("geometry")))
+    cities.createOrReplaceTempView("cities")
+
+    # Create Restaurants DataFrame
+    restaurants = sedona.createDataFrame([
+        ("r1", 2.0, 2.0),
+        ("r2", 3.0, 3.0),
+        ("r3", 4.0, 4.0),
+        ("r4", 6.0, 6.0),
+    ], ["id", "longitude", "latitude"])
+
+    restaurants = restaurants.withColumn("geometry", ST_Point(col("longitude"), col("latitude")))
+    restaurants.createOrReplaceTempView("restaurants")
+
+    # Perform Range Join using ST_Intersects
+    res = sedona.sql("""
+    SELECT 
+        cities.id AS city_id, 
+        restaurants.id AS restaurant_id
+    FROM cities
+    JOIN restaurants 
+    ON ST_Intersects(restaurants.geometry, cities.geometry)
+    """)
+
+    schema = StructType([
+        StructField("city_id", StringType(), True),
+        StructField("restaurant_id", StringType(), True)
+    ])
+
+    expected = sedona.createDataFrame([
+        ("city1", "r1"),
+        ("city1", "r2"),
+        ("city1", "r3"),
+    ], schema)
+
+    res.show()
+
+    chispa.assert_df_equality(res, expected)
