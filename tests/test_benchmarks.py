@@ -62,13 +62,13 @@ def test_run_benchmarks():
     actual.write.format("geojson").mode("overwrite").save("/tmp/a_geojson")
     df = sedona.read.format("geojson").load("/tmp/a_geojson")
     df.createOrReplaceTempView("a_table")
-    benchmark(q1, df, benchmarks=benchmarks, name="q1")
+    benchmark(q1, df, benchmarks=benchmarks, name="geojson")
 
     # GeoParquet
     actual.write.format("geoparquet").mode("overwrite").save("/tmp/a_geoparquet")
     df = sedona.read.format("geoparquet").load("/tmp/a_geoparquet")
     df.createOrReplaceTempView("a_table")
-    benchmark(q1, df, benchmarks=benchmarks, name="q2")
+    benchmark(q1, df, benchmarks=benchmarks, name="geoparquet")
 
     res = get_results(benchmarks).set_index("task")
     print(res)
