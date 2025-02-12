@@ -38,7 +38,7 @@ def test_join_touches():
         lines.id as line_id,
         polygons.id as polygon_id
     FROM lines
-    LEFT OUTER JOIN polygons ON ST_Touches(lines.geometry, polygons.geometry);        
+    LEFT JOIN polygons ON ST_Touches(lines.geometry, polygons.geometry);        
     """)
     # res.show()
 
@@ -78,7 +78,18 @@ def test_st_within():
         points.id as point_id,
         polygons.id as polygon_id
     FROM points
-    LEFT OUTER JOIN polygons ON ST_Within(points.geometry, polygons.geometry);        
+    LEFT JOIN polygons ON ST_Within(points.geometry, polygons.geometry);        
+    """)
+    print("***")
+    res.show()
+
+    # show how ST_Contains can give the same result
+    res = sedona.sql("""
+    SELECT
+        points.id as point_id,
+        polygons.id as polygon_id
+    FROM points
+    LEFT JOIN polygons ON ST_Contains(polygons.geometry, points.geometry);        
     """)
     # res.show()
 
@@ -118,7 +129,7 @@ def test_st_crosses():
         lines.id as line_id,
         polygons.id as polygon_id
     FROM lines
-    LEFT OUTER JOIN polygons ON ST_Crosses(lines.geometry, polygons.geometry);        
+    LEFT JOIN polygons ON ST_Crosses(lines.geometry, polygons.geometry);        
     """)
     # res.show()
 
@@ -160,7 +171,7 @@ def test_st_overlaps():
         shapes.id as shape_id,
         polygons.id as polygon_id
     FROM shapes
-    LEFT OUTER JOIN polygons ON ST_Overlaps(shapes.geometry, polygons.geometry);        
+    LEFT JOIN polygons ON ST_Overlaps(shapes.geometry, polygons.geometry);        
     """)
     # res.show()
 
@@ -186,6 +197,7 @@ def test_knn_join():
         ("a2", 5.0, 5.0),
         ("a3", 7.0, 2.0),
     ], ["id", "longitude", "latitude"])
+    # addresses.show()
 
     addresses = addresses.withColumn("geometry", ST_Point(col("longitude"), col("latitude")))
     addresses.createOrReplaceTempView("addresses")
@@ -197,6 +209,7 @@ def test_knn_join():
         ("c3", 5.0, 1.0),
         ("c4", 8.0, 4.0),
     ], ["id", "longitude", "latitude"])
+    # coffee_shops.show()
 
     coffee_shops = coffee_shops.withColumn("geometry", ST_Point(col("longitude"), col("latitude")))
     coffee_shops.createOrReplaceTempView("coffee_shops")
@@ -210,6 +223,7 @@ def test_knn_join():
     JOIN coffee_shops 
     ON ST_KNN(addresses.geometry, coffee_shops.geometry, 2)
     """)
+    # res.show()
 
     schema = StructType([
         StructField("address_id", StringType(), True),
@@ -235,8 +249,8 @@ def test_distance_join():
     df = sedona.createDataFrame([
         ("p1", "POINT (4.5 3)"),
     ], ["id", "geometry"])
-
     points = df.withColumn("geometry", ST_GeomFromText(col("geometry")))
+    # points.show()
     points.createOrReplaceTempView("points")
 
     # Create Transit Stations DataFrame
@@ -246,8 +260,8 @@ def test_distance_join():
         ("t3", 5.0, 2.0),
         ("t4", 8.0, 4.0),
     ], ["id", "longitude", "latitude"])
-
-    transit = df.withColumn("geometry", ST_Point(col("longitude"), col("latitude")))
+    transit = df.withColumn("geometry", ST_Point(col("longitude"), col("latitude"))).select("id", "geometry")
+    # transit.show()
     transit.createOrReplaceTempView("transit")
 
     # Perform Distance Join (within a distance of 2.5 units)
@@ -259,6 +273,7 @@ def test_distance_join():
     JOIN transit 
     ON ST_DWithin(points.geometry, transit.geometry, 2.5)
     """)
+    # res.show()
 
     schema = StructType([
         StructField("point_id", StringType(), True),
@@ -270,8 +285,6 @@ def test_distance_join():
         ("p1", "t3"),
     ], schema)
 
-    # res.show()
-
     chispa.assert_df_equality(res, expected)
 
 
@@ -282,6 +295,7 @@ def test_range_join():
     ], ["id", "geometry"])
 
     cities = cities.withColumn("geometry", ST_GeomFromText(col("geometry")))
+    cities.show()
     cities.createOrReplaceTempView("cities")
 
     # Create Restaurants DataFrame
@@ -291,8 +305,8 @@ def test_range_join():
         ("r3", 4.0, 4.0),
         ("r4", 6.0, 6.0),
     ], ["id", "longitude", "latitude"])
-
-    restaurants = restaurants.withColumn("geometry", ST_Point(col("longitude"), col("latitude")))
+    restaurants = restaurants.withColumn("geometry", ST_Point(col("longitude"), col("latitude"))).select("id", "geometry")
+    restaurants.show()
     restaurants.createOrReplaceTempView("restaurants")
 
     # Perform Range Join using ST_Intersects
@@ -304,6 +318,7 @@ def test_range_join():
     JOIN restaurants 
     ON ST_Intersects(restaurants.geometry, cities.geometry)
     """)
+    res.show()
 
     schema = StructType([
         StructField("city_id", StringType(), True),
@@ -315,7 +330,5 @@ def test_range_join():
         ("city1", "r2"),
         ("city1", "r3"),
     ], schema)
-
-    res.show()
 
     chispa.assert_df_equality(res, expected)
