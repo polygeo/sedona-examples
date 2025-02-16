@@ -1,0 +1,28 @@
+{ "type": "FeatureCollection",
+    "features": [
+      { "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [1.0, 0.0], [2.0, 1.0], [3.0, 0.0]
+            ]
+          },
+        "properties": {
+          "prop0": "value1",
+          "prop1": 0.0
+          }
+        },
+      { "type": "Feature",
+         "geometry": {
+           "type": "Polygon",
+           "coordinates": [
+             [ [100.0, 0.0], [5.0, 5.0], [6.0, 6.0], [100.0, 0.0] ]
+             ]
+         },
+         "properties": {
+           "prop0": "value2",
+           "prop1": {"this": "that"}
+           }
+         }
+       ]
+}

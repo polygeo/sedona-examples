@@ -8,7 +8,7 @@ def test_read_geojson():
     df = (
         sedona.read.format("geojson")
         .option("multiLine", "true")
-        .load("data/some_geojson.json")
+        .load("data/multiline_geojson.json")
     )
     parsedDf = (
         df.selectExpr("explode(features) as features")
@@ -18,6 +18,24 @@ def test_read_geojson():
         .drop("type")
     )
     # parsedDf.show()
+
+
+def test_read_many_geojson():
+    df = (
+        sedona.read.format("geojson")
+        .option("multiLine", "true")
+        .load("data/many_geojsons")
+    )
+    parsedDf = (
+        df.selectExpr("explode(features) as features")
+        .select("features.*")
+        .withColumn("prop0", expr("properties['prop0']"))
+        .drop("properties")
+        .drop("type")
+    )
+    print("***")
+    print("hi")
+    parsedDf.show()
 
 
 def test_read_csv():

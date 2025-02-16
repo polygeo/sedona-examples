@@ -114,5 +114,5 @@ def test_write_geoparquet_bbox():
     ''')
     res.show(truncate=False)
 
-    df = sedona.read.format("geoparquet.metadata").load("/tmp/somewhere")
+    df = sedona.read.format("geoparquet.metadata").load("/tmp/some_ex")
     df.select("columns").show(truncate=False)
