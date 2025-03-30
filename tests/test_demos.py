@@ -126,7 +126,7 @@ def test_dbscan():
             (3, 2.5, 4.0),
             (4, 8.5, 2.5),
             (5, 2.8, 4.3),
-            (6, 12.8, 4.5),
+            (6, 10.0, 4.5),
             (7, 2.5, 4.2),
             (8, 8.2, 2.5),
             (9, 8.0, 3.0),
@@ -137,6 +137,7 @@ def test_dbscan():
         ], ["id", "x", "y"])
     ).withColumn("point", ST_Point(col("x"), col("y")))
     res = dbscan(df, 1.0, 3)
+    res.select("point", "cluster").show()
     expected = (
         sedona.createDataFrame([
             (1, 0),

@@ -16,14 +16,12 @@ def test_create_linestrings():
         StructField("y", DoubleType(), True)
     ])
 
-    # Create the data
     data = [
         (1, [{"x": 1.0, "y": 2.0}, {"x": 3.0, "y": 4.0}]),
         (2, [{"x": 5.0, "y": 6.0}, {"x": 3.0, "y": 4.0}]),
         (3, [{"x": 7.0, "y": 8.0}, {"x": 9.0, "y": 10.0}, {"x": 11.0, "y": 12.0}])
     ]
 
-    # Create the DataFrame
     df = sedona.createDataFrame(data, ["id", "points"])
 
     df = df.withColumn(
@@ -41,6 +39,6 @@ def test_create_linestrings():
         ST_GeomFromWKT(col("wkt"))
     )
 
-    print("***")
-    df.show(truncate=False)
-    df.printSchema()
+    # print("***")
+    # df.show(truncate=False)
+    # df.printSchema()

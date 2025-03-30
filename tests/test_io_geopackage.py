@@ -45,3 +45,38 @@ def test_io_geopackage():
     # print("***")
     # print("***")
     # df.show()
+
+
+def test_io_geopackages():
+    os.makedirs("/tmp/gpkgs", exist_ok=True)
+    # Create one file
+    point1 = Point(0, 0)
+    point2 = Point(1, 1)
+    data = {
+        "name": ["Point A", "Point B"],
+        "value": [10, 20],
+        "geometry": [point1, point2],
+    }
+    gdf = gpd.GeoDataFrame(data, geometry="geometry")
+    gdf.to_file("/tmp/gpkgs/my_file1.gpkg", layer="my_layer", driver="GPKG")
+
+    # Create another file
+    point3 = Point(5, 5)
+    polygon1 = Polygon([(5, 5), (6, 6), (7, 5), (6, 4)])
+    data = {
+        "name": ["Point C", "Polygon A"],
+        "value": [30, 40],
+        "geometry": [point3, polygon1],
+    }
+    gdf = gpd.GeoDataFrame(data, geometry="geometry")
+    gdf.to_file("/tmp/gpkgs/my_file2.gpkg", layer="my_layer", driver="GPKG")
+
+    # Read GeoPackages
+    df = (
+        sedona.read.format("geopackage")
+        .option("tableName", "my_layer")
+        .load("/tmp/gpkgs")
+    )
+    # print("***")
+    # print("***")
+    # df.show()

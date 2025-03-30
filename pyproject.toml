@@ -5,7 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "apache-sedona>=1.7.0",
+    "apache-sedona>=1.7.1",
     "chispa>=0.10.1",
     "pandas>=2.2.3",
     "pyspark>=3.5.3",
