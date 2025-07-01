@@ -4,6 +4,8 @@ from sedona.spark import *
 from .sedona import sedona
 import chispa
 import pytest
+from shapely import Polygon, LineString
+from pyspark.sql.functions import col
 
 
 def test_geometrytype():
@@ -118,3 +120,31 @@ def test_st_transform():
     # sedona.sql(sql).show()
     # TODO: figure out assertion
 
+
+def test_linesegments():
+    df = sedona.createDataFrame([
+        ("a", LineString([(1, 1), (1, 3), (2, 4)])),
+        ("b", LineString([(4, 2), (6, 2), (9, 1)])),
+    ], ["id", "geometry"])
+
+    print("***")
+
+    df.selectExpr(
+        "id",
+        "ST_LineSegments(geometry)"
+    ).show(truncate=False)
+
+    # df.withColumn(
+    #     "distance", 
+    #     ST_LineSegements(col("geometry"))
+    # ).show()
+
+
+def test_uuid_type():
+    df = sedona.createDataFrame([
+        ("a", 1),
+        ("b", 2),
+    ], ["letter", "number"])
+    res = df.selectExpr("letter", "uuid()")
+    res.show(truncate=False)
+    res.printSchema()
