@@ -9,6 +9,7 @@ dependencies = [
     "chispa>=0.10.1",
     "pandas>=2.2.3",
     "pyspark>=3.5.3",
+    "geopandas==1.1.1",
 ]
 
 [dependency-groups]
