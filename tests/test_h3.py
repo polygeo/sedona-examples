@@ -10,8 +10,6 @@ from shapely import Point, Polygon, LineString
 
 
 def test_H3CellDistance():
-
-
     empire_state_building = Point(-73.985428, 40.748817)
     freedom_tower = Point(-74.013379, 40.712743)
     willis_tower = Point(-87.635918, 41.878876)
