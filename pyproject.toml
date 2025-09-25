@@ -8,7 +8,8 @@ dependencies = [
     "apache-sedona[db]==1.8.0",
     "pandas",
     "geopandas",
-    "jupyter"
+    "jupyter",
+    "lonboard"
 ]
 
 [dependency-groups]
