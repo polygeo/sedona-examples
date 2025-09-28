@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "apache-sedona[db]==1.8.0",
+    "pyspark==3.5.7",
     "pandas",
     "geopandas",
     "jupyter",
