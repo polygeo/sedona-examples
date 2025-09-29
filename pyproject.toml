@@ -10,7 +10,9 @@ dependencies = [
     "pandas",
     "geopandas",
     "jupyter",
-    "lonboard"
+    "lonboard",
+    "matplotlib",
+    "palettable"
 ]
 
 [dependency-groups]
