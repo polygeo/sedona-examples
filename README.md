@@ -1,12 +1,19 @@
 # Sedona Examples
 
-This repo demos the functionality of Apache Sedona with PySpark and provides examples that can be easily run on your local machine.
+This repo demos Apache Sedona via tests and notebooks.  It shows SedonaDB and SedonaSpark.
 
-You can run the test suite as follows: `uv run pytest tests`.
+Here's how you can get up-and-running fast:
 
-Make sure to install [uv](https://docs.astral.sh/uv/) on your machine to run the examples.  You should also have Java installed (Java 17 works well).
+* install the dependencies with `pip install -r pyproject.toml`
+* open Jupyter: `jupyter lab`
 
-Here's how to run the test suite with the printed output displayed: `uv run pytest tests -s`.
+From there, you can easily run the notebooks.
+
+You can also use the [uv](https://docs.astral.sh/uv/) package manager to create your Python virtual environment.  Here are the installation instructions with uv:
+
+* create an environment with `uv venv`
+* install the dependencies with `uv pip install -f pyproject.toml`
+* open Jupyter: `uv run jupyter lab`
 
 ## Demo Apache Sedona Capabilities
 
@@ -48,6 +55,14 @@ Here's the result:
 +----------+---------+-----------------+
 ```
 
+## SedonaSpark examples
+
+You can run the test suite as follows: `uv run pytest tests`.
+
+Make sure to install  on your machine to run the examples.  You should also have Java installed (Java 17 works well).
+
+Here's how to run the test suite with the printed output displayed: `uv run pytest tests -s`.
+
 ## Unit testing Apache Sedona
 
 A unit test compares an actual result to an expected outcome.
@@ -74,13 +89,3 @@ chispa.assert_df_equality(actual, expected)
 ```
 
 This library provides an easy way to invoke the Sedona functions on your local machine!
-
-## Run Sedona in a Jupyter notebook
-
-Create a kernel: `uv run ipython kernel install --user --name=sedonaexamples`.
-
-Start the server: `uv run --with jupyter jupyter lab`.
-
-You can open up the sample notebook and run the code.  Here is what it should look like:
-
-![notebook sedona](https://github.com/MrPowers/sedona-examples/blob/main/images/sedona-notebook.png)
