@@ -13,7 +13,8 @@ dependencies = [
     "lonboard",
     "matplotlib",
     "palettable",
-    "deltalake"
+    "deltalake",
+    "giso"
 ]
 
 [dependency-groups]

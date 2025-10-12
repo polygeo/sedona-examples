@@ -449,6 +449,18 @@ wheels = [
 ]
 
 [[package]]
+name = "click"
+version = "8.3.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "colorama", marker = "platform_system == 'Windows'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/46/61/de6cd827efad202d7057d93e0fed9294b96952e188f7384832791c7b2254/click-8.3.0.tar.gz", hash = "sha256:e7b8232224eba16f4ebe410c25ced9f7875cb5f3263ffc93cc3e8da705e229c4", size = 276943 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/db/d3/9dcc0f5797f070ec8edf30fbadfb200e71d9db6b84d211e3b2085a7589a0/click-8.3.0-py3-none-any.whl", hash = "sha256:9b9f285302c6e3064f4330c05f05b81945b2a39544279343e6e7c5f27a9baddc", size = 107295 },
+]
+
+[[package]]
 name = "colorama"
 version = "0.4.6"
 source = { registry = "https://pypi.org/simple" }
@@ -775,6 +787,21 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/8c/76/e1960ba846f153ab109575242abf89dc98f8e057faa32f3decf4cce9247a/geopandas-1.1.1.tar.gz", hash = "sha256:1745713f64d095c43e72e08e753dbd271678254b24f2e01db8cdb8debe1d293d", size = 332655 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/0b/70/d5cd0696eff08e62fdbdebe5b46527facb4e7220eabe0ac6225efab50168/geopandas-1.1.1-py3-none-any.whl", hash = "sha256:589e61aaf39b19828843df16cb90234e72897e2579be236f10eee0d052ad98e8", size = 338365 },
+]
+
+[[package]]
+name = "giso"
+version = "1.0.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "apache-sedona", extra = ["db"] },
+    { name = "click" },
+    { name = "geopandas" },
+    { name = "pyarrow" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/12/ba/633b2152cedb5820ef5a3de0d940866a77822a9595374131020c080a5792/giso-1.0.0.tar.gz", hash = "sha256:49be05da1d6561418031adfca797e9b0d91a7b46bd942f651c298a570094f01c", size = 11078290 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/35/85/fb40dc1a69ba827ab3bb90d3b8128d79e6171bc836c0df8d6ed4b88db20c/giso-1.0.0-py3-none-any.whl", hash = "sha256:ee30695182f0da2408b47114703978d96cbb4ca68b528c891e78ed3bf81989d6", size = 11041068 },
 ]
 
 [[package]]
@@ -2184,6 +2211,7 @@ dependencies = [
     { name = "apache-sedona", extra = ["db"] },
     { name = "deltalake" },
     { name = "geopandas" },
+    { name = "giso" },
     { name = "jupyter" },
     { name = "lonboard" },
     { name = "matplotlib" },
@@ -2203,6 +2231,7 @@ requires-dist = [
     { name = "apache-sedona", extras = ["db"], specifier = "==1.8.0" },
     { name = "deltalake" },
     { name = "geopandas" },
+    { name = "giso" },
     { name = "jupyter" },
     { name = "lonboard" },
     { name = "matplotlib" },
